@@ -1,4 +1,4 @@
-package klaxon.klaxon.gluebox.tests;
+package klaxon.klaxon.gluebox;
 
 import static org.lwjgl.opengl.GL11.GL_LIGHT0;
 import static org.lwjgl.opengl.GL11.glGetBoolean;
@@ -7,19 +7,13 @@ import static org.lwjgl.opengl.GL11.glPushAttrib;
 import static org.lwjgl.opengl.GL11C.glDisable;
 import static org.lwjgl.opengl.GL11C.glEnable;
 
-import klaxon.klaxon.gluebox.GlueBoxExtension;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-@ExtendWith(GlueBoxExtension.class)
-public class LightTest {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LightTest.class);
+public class LightTest extends GlueBoxExtension {
+    private static final Logger LOGGER = LogManager.getLogger(LightTest.class);
 
-    @Test
     void testPushPopEnableBit() {
         // Unset all light bits
         final int maxLights = GL11.glGetInteger(GL11.GL_MAX_LIGHTS);

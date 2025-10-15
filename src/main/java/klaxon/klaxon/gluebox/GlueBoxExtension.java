@@ -1,7 +1,5 @@
 package klaxon.klaxon.gluebox;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
@@ -16,25 +14,23 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-import org.junit.jupiter.api.extension.AfterEachCallback;
-import org.junit.jupiter.api.extension.BeforeAllCallback;
-import org.junit.jupiter.api.extension.ExtensionContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.system.MemoryStack;
 
-public class GlueBoxExtension implements BeforeAllCallback, AfterEachCallback, ExtensionContext.Store.CloseableResource {
+public abstract class GlueBoxExtension {
 
+    private static final Logger LOGGER = LogManager.getLogger(GlueBoxExtension.class);
     private static long windowHandle;
     public static String glVendor;
     public static String glRenderer;
     public static String glVersion;
 
-    @Override
-    public void beforeAll(ExtensionContext context) {
-
+    public void beforeAll() {
         GLFWErrorCallback.createPrint(System.err).set();
         if (!glfwInit()) throw new IllegalStateException("Failed to initialize GLFW!");
 
@@ -61,18 +57,16 @@ public class GlueBoxExtension implements BeforeAllCallback, AfterEachCallback, E
 
         GL.createCapabilities();
 
-        context.getRoot().getStore(GLOBAL).put("GlueBoxExtension", this);
         glVendor = GL11.glGetString(GL11.GL_VENDOR);
         glRenderer = GL11.glGetString(GL11.GL_RENDERER);
         glVersion = GL11.glGetString(GL11.GL_VERSION);
 
-        System.out.println("OpenGL Vendor: " + glVendor);
-        System.out.println("OpenGL Renderer: " + glRenderer);
-        System.out.println("OpenGL Version: " + glVersion);
+        LOGGER.info("OpenGL Vendor: {}", glVendor);
+        LOGGER.info("OpenGL Renderer: {}", glRenderer);
+        LOGGER.info("OpenGL Version: {}", glVersion);
 
     }
 
-    @Override
     public void close() {
         glfwFreeCallbacks(windowHandle);
         glfwDestroyWindow(windowHandle);
@@ -80,9 +74,7 @@ public class GlueBoxExtension implements BeforeAllCallback, AfterEachCallback, E
         glfwSetErrorCallback(null).free();
     }
 
-    @Override
-    public void afterEach(ExtensionContext context) {
-        assertEquals(GL11.GL_NO_ERROR, GL11.glGetError(), "GL Error");
+    public void afterEach() {
+        assert(GL11.GL_NO_ERROR == GL11.glGetError());
     }
-
 }

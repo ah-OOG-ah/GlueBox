@@ -1,5 +1,6 @@
 plugins {
-    id("java")
+    java
+    application
 }
 
 group = "klaxon.klaxon.gluebox"
@@ -26,12 +27,17 @@ dependencies {
     implementation("org.lwjgl", "lwjgl-glfw", classifier = lwjglNatives)
     implementation("org.lwjgl", "lwjgl-opengl", classifier = lwjglNatives)
 
-    implementation("org.slf4j:slf4j-api:2.0.17")
-    implementation("org.slf4j:slf4j-simple:2.0.17")
+    implementation("org.apache.logging.log4j:log4j-api:2.12.4")
+    implementation("org.apache.logging.log4j:log4j-core:2.12.4")
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+application {
+    applicationDefaultJvmArgs = listOf("-ea", "--enable-native-access=ALL-UNNAMED")
+    mainClass = "klaxon.klaxon.gluebox.Main"
 }
 
 tasks.test {
