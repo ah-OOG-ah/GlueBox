@@ -22,9 +22,12 @@ dependencies {
     implementation("org.lwjgl", "lwjgl")
     implementation("org.lwjgl", "lwjgl-glfw")
     implementation("org.lwjgl", "lwjgl-opengl")
-    implementation ("org.lwjgl", "lwjgl", classifier = lwjglNatives)
-    implementation ("org.lwjgl", "lwjgl-glfw", classifier = lwjglNatives)
-    implementation ("org.lwjgl", "lwjgl-opengl", classifier = lwjglNatives)
+    implementation("org.lwjgl", "lwjgl", classifier = lwjglNatives)
+    implementation("org.lwjgl", "lwjgl-glfw", classifier = lwjglNatives)
+    implementation("org.lwjgl", "lwjgl-opengl", classifier = lwjglNatives)
+
+    implementation("org.slf4j:slf4j-api:2.0.17")
+    implementation("org.slf4j:slf4j-simple:2.0.17")
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
