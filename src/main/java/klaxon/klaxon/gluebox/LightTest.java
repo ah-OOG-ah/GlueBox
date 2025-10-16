@@ -14,6 +14,11 @@ import org.lwjgl.opengl.GL11;
 public class LightTest extends GlueBoxExtension {
     private static final Logger LOGGER = LogManager.getLogger(LightTest.class);
 
+    public LightTest() {
+        super();
+        tests.add(this::testPushPopEnableBit);
+    }
+
     void testPushPopEnableBit() {
         // Unset all light bits
         final int maxLights = GL11.glGetInteger(GL11.GL_MAX_LIGHTS);
@@ -24,24 +29,21 @@ public class LightTest extends GlueBoxExtension {
         // Push the bits and make sure they haven't changed
         glPushAttrib(GL11.GL_ENABLE_BIT);
         for (int i = 0; i < maxLights; ++i) {
-            assert(!glGetBoolean(GL_LIGHT0 + i));
+            assertLog(!glGetBoolean(GL_LIGHT0 + i), "Passthrough failed!");
         }
-        LOGGER.info("Unset bits successfully passed through!");
 
         // Set them...
         for (int i = 0; i < maxLights; ++i) {
             glEnable(GL_LIGHT0 + i);
-            assert(glGetBoolean(GL_LIGHT0 + i));
+            assertLog(glGetBoolean(GL_LIGHT0 + i), "Failed to set bit!");
         }
-        LOGGER.info("All bits successfully set!");
 
         // And pop them, making sure they get unset
         glPopAttrib();
 
         for (int i = 0; i < maxLights; ++i) {
             glEnable(GL_LIGHT0 + i);
-            assert(!glGetBoolean(GL_LIGHT0 + i));
+            assertLog(!glGetBoolean(GL_LIGHT0 + i), "Failed to pop bit state!");
         }
-        LOGGER.info("All bits successfully popped!");
     }
 }

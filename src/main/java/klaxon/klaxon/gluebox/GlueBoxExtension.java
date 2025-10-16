@@ -14,6 +14,7 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
+import java.util.ArrayList;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -25,10 +26,20 @@ import org.lwjgl.system.MemoryStack;
 public abstract class GlueBoxExtension {
 
     private static final Logger LOGGER = LogManager.getLogger(GlueBoxExtension.class);
-    private static long windowHandle;
-    public static String glVendor;
-    public static String glRenderer;
-    public static String glVersion;
+    private long windowHandle;
+    public String glVendor;
+    public String glRenderer;
+    public String glVersion;
+    protected final ArrayList<Runnable> tests = new ArrayList<>();
+
+    public void test() {
+        beforeAll();
+        for (var test : tests) {
+            test.run();
+            afterEach();
+        }
+        close();
+    }
 
     public void beforeAll() {
         GLFWErrorCallback.createPrint(System.err).set();
@@ -76,5 +87,14 @@ public abstract class GlueBoxExtension {
 
     public void afterEach() {
         assert(GL11.GL_NO_ERROR == GL11.glGetError());
+    }
+
+    public void assertLog(boolean azzert, String message) {
+        try {
+            assert(azzert);
+        } catch (AssertionError e) {
+            LOGGER.fatal(message);
+            throw e;
+        }
     }
 }
