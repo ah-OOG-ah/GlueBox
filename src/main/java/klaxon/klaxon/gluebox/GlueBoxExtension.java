@@ -90,11 +90,8 @@ public abstract class GlueBoxExtension {
     }
 
     public void assertLog(boolean azzert, String message) {
-        try {
-            assert(azzert);
-        } catch (AssertionError e) {
-            LOGGER.fatal(message);
-            throw e;
+        if (!azzert) {
+            throw new AssertionError(message);
         }
     }
 }

@@ -1,6 +1,7 @@
 plugins {
     java
     application
+    id("com.gradleup.shadow") version "9.2.2"
 }
 
 group = "klaxon.klaxon.gluebox"
