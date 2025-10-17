@@ -45,7 +45,7 @@ java {
 }
 
 application {
-    applicationDefaultJvmArgs = listOf("-ea", "--enable-native-access=ALL-UNNAMED")
+    applicationDefaultJvmArgs = listOf("--enable-native-access=ALL-UNNAMED")
     mainClass = "klaxon.klaxon.gluebox.Main"
 }
 
